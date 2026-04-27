@@ -1,9 +1,9 @@
-# Nexus Code Editor 🚀
+# Cortex IDE 🚀
 
 > *Stop building boring things.* A next-generation, AI-powered code editor designed to go beyond basic auto-completion by offering deep codebase insights and structural intelligence.
 
 ## 📖 Overview
-Most AI coding tools function as simple "copilots" that autocomplete syntax. **Nexus** is built differently. Designed as a standout portfolio project, it treats the codebase as a living product by integrating advanced AI features that help developers optimize logic, visually understand project architecture, and remember the *why* behind architectural decisions.
+Most AI coding tools function as simple "copilots" that autocomplete syntax. **Cortex IDE** is built differently. Designed as a standout portfolio project, it treats the codebase as a living product by integrating advanced AI features that help developers optimize logic, visually understand project architecture, and remember the *why* behind architectural decisions.
 
 ## ✨ Unique Features
 Instead of basic to-do apps or generic e-commerce clones, this editor implements three core standout features:
@@ -20,15 +20,3 @@ Instead of basic to-do apps or generic e-commerce clones, this editor implements
 * **AI Engine:** [Google Gemini API](https://ai.google.dev/) / OpenAI API / Claude API
 * **Database:** MongoDB (for storing *Decision Memories*)
 
----
-
-## 🚀 Quick Start
-
-### Prerequisites
-Make sure you have Node.js installed, along with an API key from your preferred AI provider (like Google Gemini).
-
-### Installation
-1. **Clone the repository:**
-   ```bash
-   git clone [https://github.com/yourusername/nexus-code-editor.git](https://github.com/yourusername/nexus-code-editor.git)
-   cd nexus-code-editor
