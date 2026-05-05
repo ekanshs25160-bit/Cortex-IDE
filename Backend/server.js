@@ -6,11 +6,9 @@ const { GoogleGenerativeAI } = require('@google/generative-ai');
 const app = express();
 const port = process.env.PORT || 5001;
 
-// Middleware
 app.use(cors());
 app.use(express.json());
 
-// Initialize Google Generative AI
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
 
 app.post('/api/ai/intent', async (req, res) => {
@@ -48,9 +46,9 @@ Please return ONLY the complete modified code. Do not include any markdown forma
     res.status(500).json({ error: 'An error occurred while processing the code.' });
   }
 });
-
+// Architecture Analysis (For Initial Map)
 app.post('/api/ai/analyze-architecture', async (req, res) => {
-  const { files } = req.body; // The entire array of file objects
+  const { files } = req.body;
   
   const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
 
@@ -65,6 +63,25 @@ app.post('/api/ai/analyze-architecture', async (req, res) => {
     res.status(500).json({ error: "Architecture analysis failed" });
   }
 });
+// Map Builder (For Dynamic Map)
+app.post('/api/ai/analyze-map', async (req, res) => {
+  const { files } = req.body;
+  const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+
+  const prompt = `Analyze these files and identify relationships (who imports/calls what).
+  Return a JSON object with a list of 'edges' where each edge has a 'source' (file ID) and 'target' (file ID).
+  Files: ${JSON.stringify(files)}`;
+
+  try {
+    const result = await model.generateContent(prompt);
+    // Clean and parse the AI's JSON output
+    let text = result.response.text().replace(/^```json/, '').replace(/```$/, '').trim();
+    res.json(JSON.parse(text));
+  } catch (error) {
+    res.status(500).json({ error: "Failed to map architecture" });
+  }
+});
+
 
 app.listen(port, () => {
   console.log(`Server listening on port ${port}`);

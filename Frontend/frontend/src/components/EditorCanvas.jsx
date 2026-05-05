@@ -3,7 +3,6 @@ import Editor from '@monaco-editor/react';
 
 export default function EditorCanvas({ activeFile, onCodeChange }) {
   
-  // Directly pass the new value to the parent App.jsx
   function handleEditorChange(value) {
     onCodeChange(value);
   }
@@ -19,10 +18,10 @@ export default function EditorCanvas({ activeFile, onCodeChange }) {
   return (
     <div className="flex-1 w-full h-full"> 
       <Editor
-        height="100%" // Fill the entire section provided by App.jsx
-        path={activeFile.name} // Helps Monaco track multiple files/tabs correctly
-        language={activeFile.language} // Dynamic language support
-        value={activeFile.content} // Controlled component
+        height="100%" 
+        path={activeFile.name} 
+        language={activeFile.language} 
+        value={activeFile.content} 
         theme="vs-dark"
         onChange={handleEditorChange}
         options={{

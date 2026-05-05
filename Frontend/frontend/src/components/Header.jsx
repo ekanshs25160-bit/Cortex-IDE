@@ -11,20 +11,7 @@ export default function Header({ activeTab, setActiveTab, onIntentClick }) {
         </div>
         
         <nav className="flex h-full items-end ml-6">
-          {/* <button 
-            onClick={() => setActiveTab('index.html')}
-            className={`h-full px-4 py-2 text-xs transition-colors flex items-center gap-2 rounded-t-lg ${activeTab === 'index.html' ? 'border-t-2 border-accent bg-white/5 text-white' : 'text-stone-400 hover:text-stone-200 hover:bg-white/10'}`}
-          >
-            <FileCode className={`w-4 h-4 ${activeTab === 'index.html' ? 'text-accent' : ''}`} />
-            index.html
-          </button>
-          <button 
-            onClick={() => setActiveTab('script.py')}
-            className={`h-full px-4 py-2 text-xs transition-colors flex items-center gap-2 rounded-t-lg ${activeTab === 'script.py' ? 'border-t-2 border-accent bg-white/5 text-white font-medium' : 'text-stone-400 hover:text-stone-200 hover:bg-white/10'}`}
-          >
-            <FileCode className={`w-4 h-4 ${activeTab === 'script.py' ? 'text-accent' : ''}`} />
-            script.py
-          </button> */}
+          
         </nav>
       </div>
 

@@ -9,7 +9,13 @@ import DecisionMemory from "./components/DecisionMemory";
 import ArchitectureCanvas from "./components/ArchitectureCanvas";
 
 const initialFiles = [
-  { id: 1, name: "index.html", language: "html", content: "<h1>Hello</h1>", memories:[] },
+  {
+    id: 1,
+    name: "index.html",
+    language: "html",
+    content: "<h1>Hello</h1>",
+    memories: [],
+  },
 ];
 export default function App() {
   const [activeTab, setActiveTab] = useState("script.py");
@@ -21,16 +27,16 @@ export default function App() {
   const [viewMode, setViewMode] = useState("editor");
 
   const updateCode = (newCode) => {
-  if (!activeFile) return;
+    if (!activeFile) return;
 
-  // Update the master list
-  setFiles(prevFiles => prevFiles.map((file) =>
-    file.id === activeFile.id ? { ...file, content: newCode } : file
-  ));
+    setFiles((prevFiles) =>
+      prevFiles.map((file) =>
+        file.id === activeFile.id ? { ...file, content: newCode } : file,
+      ),
+    );
 
-  // Update the active view
-  setActiveFile(prev => ({ ...prev, content: newCode }));
-};
+    setActiveFile((prev) => ({ ...prev, content: newCode }));
+  };
 
   const createFile = () => {
     const name = prompt("Enter file name (e.g. script.js):");
@@ -41,10 +47,9 @@ export default function App() {
       name: name,
       language: name.endsWith(".py") ? "python" : "javascript",
       content: "",
-      memories: [], // Ensure this is always an empty array, not undefined
+      memories: [],
     };
 
-    // FIX: Functional update for adding files
     setFiles((prev) => [...prev, newFile]);
     setActiveFile(newFile);
   };
@@ -59,9 +64,13 @@ export default function App() {
     }
   };
 
-  const handleIntentMode = async () => {
+  const handleIntentMode = async (predefinedIntent = null) => {
     if (!activeFile) return;
-    const userIntent = prompt("How should AI help you?");
+    
+    // Check if the argument is a string (from ToolbarButtons) or an Event object (from regular onClick)
+    const intentString = typeof predefinedIntent === 'string' ? predefinedIntent : null;
+    
+    const userIntent = intentString || prompt("How should AI help you?");
     if (!userIntent) return;
 
     try {
@@ -69,7 +78,7 @@ export default function App() {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          code: activeFile.content,
+          code: activeFile.content || " ",
           language: activeFile.language,
           intent: userIntent,
         }),
@@ -84,36 +93,33 @@ export default function App() {
           timestamp: new Date().toLocaleTimeString(),
         };
 
-        // FIX: Use functional update (prevFiles) to avoid stale state
-        setFiles((prevFiles) => {
-          const updated = prevFiles.map((f) => {
-            if (f.id === activeFile.id) {
-              return {
-                ...f,
-                content: data.optimizedCode,
-                memories: [...(f.memories || []), newMemory],
-              };
-            }
-            return f;
-          });
+        const updatedFile = {
+          ...activeFile,
+          content: data.optimizedCode,
+          memories: [...(activeFile.memories || []), newMemory],
+        };
 
-          // Sync activeFile immediately after defining updated list
-          const currentFile = updated.find((f) => f.id === activeFile.id);
-          setActiveFile(currentFile);
-          
-          return updated;
-        });
-      }
-    } catch (error) {
+        setFiles((prevFiles) =>
+        prevFiles.map((f) => (f.id === activeFile.id ? updatedFile : f))
+        );
+           
+         
+          setActiveFile(updatedFile);
+    }
+  }
+    catch (error) {
       console.error("Error in intent mode", error);
     }
   };
 
   return (
     <div className="h-screen w-screen bg-surface-container-lowest text-on-surface flex flex-col font-sans overflow-hidden selection:bg-accent/30">
-      <Header activeTab={activeTab} setActiveTab={setActiveTab} onIntentClick={handleIntentMode} />
+      <Header
+        activeTab={activeTab}
+        setActiveTab={setActiveTab}
+        onIntentClick={handleIntentMode}
+      />
 
-      {/* Main Container */}
       <main className="flex-1 flex overflow-hidden relative">
         <Sidebar
           isSidebarOpen={isSidebarOpen}
@@ -123,14 +129,14 @@ export default function App() {
         <ExplorerPanel
           isSidebarOpen={isSidebarOpen}
           setIsSidebarOpen={setIsSidebarOpen}
-          files={files} // Pass the array of files
-          onFileClick={setActiveFile} // Pass function to change active file
-          onCreate={createFile} // Pass the create function
-          onDelete={deleteFile} // Pass the delete function
-          activeFileId={activeFile?.id} // So we can highlight the current file
+          files={files}
+          onFileClick={setActiveFile}
+          onCreate={createFile}
+          onDelete={deleteFile}
+          activeFileId={activeFile?.id}
         />
         <section className="flex-1 flex flex-col min-w-0 bg-surface relative">
-          <UtilityBar onIntentClick={handleIntentMode}/>
+          <UtilityBar viewMode={viewMode} setViewMode={setViewMode} onIntentClick={handleIntentMode} />
           {viewMode === "editor" ? (
             <EditorCanvas activeFile={activeFile} onCodeChange={updateCode} />
           ) : (
