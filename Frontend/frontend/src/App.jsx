@@ -77,7 +77,7 @@ export default function App() {
     if (!userIntent) return;
 
     try {
-      const response = await fetch("http://localhost:5001/api/ai/intent", {
+      const response = await fetch("https://cortex-ide.onrender.com/api/ai/intent", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -115,7 +115,7 @@ export default function App() {
 
   const analyzeCodebase = async () => {
     try {
-      const response = await fetch("http://localhost:5001/api/ai/analyze-map", {
+      const response = await fetch("https://cortex-ide.onrender.com/api/ai/analyze-map", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ files }),
