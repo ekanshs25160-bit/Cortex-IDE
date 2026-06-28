@@ -1,6 +1,6 @@
 import React from 'react';
 import Editor from '@monaco-editor/react';
-
+import { getLanguageFromExtension } from './ExplorerPanel';
 export default function EditorCanvas({ activeFile, onCodeChange }) {
   
   function handleEditorChange(value) {
@@ -20,7 +20,7 @@ export default function EditorCanvas({ activeFile, onCodeChange }) {
       <Editor
         height="100%" 
         path={activeFile.name} 
-        language={activeFile.language} 
+        language={getLanguageFromExtension(activeFile.name)} 
         value={activeFile.content} 
         theme="vs-dark"
         onChange={handleEditorChange}

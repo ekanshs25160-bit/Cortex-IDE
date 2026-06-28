@@ -1,8 +1,18 @@
 import React from 'react';
-import { Code2, Network, Bug, Cpu, Sparkles, BookOpen } from 'lucide-react';
+import { Code2, Network, Bug, Cpu, Sparkles, BookOpen, Play } from 'lucide-react';
 import ToolbarButton from './ToolbarButton';
 
-export default function UtilityBar({ viewMode, setViewMode, onIntentClick }) {
+export default function UtilityBar({ viewMode, setViewMode, onIntentClick, activeFile }) {
+  const runCodeInTerminal = () => {
+    if (!activeFile || !activeFile.name) return;
+    
+    // Custom event to broadcast straight to your TerminalPanel instance
+    const event = new CustomEvent('run-terminal-command', {
+      detail: { filename: activeFile.name, content: activeFile.content }
+    });
+    window.dispatchEvent(event);
+  };
+
   return (
     <div className="h-10 border-b border-white/5 flex items-center justify-between px-2 md:px-4 bg-surface-container/50 gap-2 shrink-0">
       {/* View toggle */}
@@ -32,7 +42,12 @@ export default function UtilityBar({ viewMode, setViewMode, onIntentClick }) {
       </div>
 
       {/* Toolbar actions */}
-      <div className="flex items-center gap-1 md:gap-2 overflow-x-auto scrollbar-none">
+      <div className="flex items-center gap-1 md:gap-2 overflow-x-auto [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
+        <ToolbarButton
+          icon={<Play className="w-3.5 h-3.5 md:w-4 md:h-4 text-emerald-400" />}
+          title="Run Code"
+          onClick={runCodeInTerminal}
+        />
         <ToolbarButton
           icon={<Bug className="w-3.5 h-3.5 md:w-4 md:h-4" />}
           title="Debug"
